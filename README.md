@@ -50,6 +50,28 @@ Already a running a Validator? EthPillar is compatible with [a Coincashew V2 Sta
 
 :tada: **Multiple deployment configurations:** Deploy a Solo Staking Node, Full Node Only, Lido CSM Staking Node, Validator Client Only or Failover Staking Node.
 
+## 🗺️ Project Architecture
+
+For a full walkthrough, see ARCHITECTURE.md. Quick visual overview:
+
+```mermaid
+flowchart LR
+  U[User CLI] --> EP[ethpillar.sh (TUI)]
+  EP --> FN[functions.sh helpers]
+  EP -->|First run| IN[install-node.sh]
+  IN --> DEP[deploy-*.py]
+  DEP --> SVC[/systemd services\nexecution/consensus/validator/mevboost/]
+  EP -->|Plugins| PLUG[plugins/*]
+  PLUG --> INST[plugin_*.sh install]
+  INST --> OPT[/opt/ethpillar/<plugin>\n.env + docker-compose.yml/]
+  OPT --> DC[docker compose up -d]
+  EP --> LOGS[view_logs.sh]
+  LOGS --> J[systemd journal]
+  LOGS --> DCL[Docker logs]
+  EP --> MON[Monitoring submenu]
+  MON --> GRAF[Grafana / Prometheus / Exporters]
+```
+
 ## :sunglasses: Preview
 
 <figure><img src="https://raw.githubusercontent.com/coincashew/coincashew/bb0f8a3c1661ec45496d4aabc25235d6ce14dc4e/.gitbook/assets/preview02.png" alt=""><figcaption><p>Main Menu</p></figcaption></figure>

@@ -84,7 +84,20 @@ function testAndServiceCommand() {
 function testAndPluginCommand() {
   local _DIRNAME=("aztec")
   for (( i=0; i<${#_DIRNAME[@]}; i++ )); do
-    test -d /opt/ethpillar/"${_DIRNAME[i]}" && cd "/opt/ethpillar/${_DIRNAME[i]}" && docker compose "$1"
+    if test -d /opt/ethpillar/"${_DIRNAME[i]}"; then
+      cd "/opt/ethpillar/${_DIRNAME[i]}"
+      case "$1" in
+        start)
+          # Ensure containers are created and started, similar to systemd start
+          docker compose up -d ;;
+        stop)
+          docker compose stop ;;
+        restart)
+          docker compose restart ;;
+        *)
+          docker compose "$1" ;;
+      esac
+    fi
   done
 }
 
